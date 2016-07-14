@@ -1,5 +1,4 @@
-FROM ubuntu:14.04
-RUN apt-get update && apt-get install -y python-pip python-dev
+FROM python:2.7.12
 RUN mkdir -p /server
 ADD requirements.txt /server/requirements.txt
 WORKDIR /server

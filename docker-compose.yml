@@ -7,7 +7,7 @@ registry:
         - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
         - REGISTRY_HTTP_TLS_KEY=/certs/server.key
         - REGISTRY_AUTH=token
-        - REGISTRY_AUTH_TOKEN_REALM=http://192.168.99.100:8080/tokens
+        - REGISTRY_AUTH_TOKEN_REALM=http://$DOCKER_IP:8080/tokens
         - REGISTRY_AUTH_TOKEN_SERVICE=demo_registry
         - REGISTRY_AUTH_TOKEN_ISSUER=demo_oauth
         - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/certs/server.crt
@@ -20,6 +20,7 @@ oauth_server:
     ports:
         - 8080:8080
     volumes:
+        - .:/server
         - ./certs:/certs
     environment:
         - SIGNING_KEY_PATH=/certs/server.key
@@ -28,3 +29,5 @@ oauth_server:
         - ISSUER=demo_oauth
         - TOKEN_EXPIRATION=3600
         - TOKEN_TYPE=JWT
+        - CONJUR_SSL_CERT=/certs/conjur-conjurops.pem
+        - CONJUR_URL=https://conjur-master.itp.conjur.net

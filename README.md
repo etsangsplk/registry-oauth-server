@@ -1,45 +1,39 @@
 # registry-oauth-server
 
+This is a forked version of OpenDNS's [registry-oauth-server](https://github.com/opendns/registry-oauth-server). 
+View the upstream README for configuration defaults.
+
+The purpose of this fork is to authenticate and authorize Docker registry users with
+Conjur.
+
 ## Quickstart
 
-To build and start the containers, simply run the command
+This assumes you have Docker running (docker-machine on OSX) and available.
+
+Start the `registry` and `oauth_server` containers:
 
 ```
-./build.sh
-```
-After installation is finished, you should have a local registry running on *:5000*, and a local oauth server running on *:8080*.
-
-```
-CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                    NAMES
-915726d60e03        demo_oauth_server   "/bin/sh -c 'python r"   8 minutes ago       Up 8 minutes        0.0.0.0:8080->8080/tcp   demo_oauth_server_1
-16c5c1cb2310        registry:2          "/bin/registry /etc/d"   2 hours ago         Up 27 minutes       0.0.0.0:5000->5000/tcp   demo_registry_1
+$ ./build.sh
 ```
 
-To see the oauth server in action, run the startdemo.sh script provided
+After installation is finished, you should have a local registry running on `:5000`,
+and a local oauth server running on `:8080`. These instructions assume docker-machine; if you're running Docker natively use `localhost` instead of `docker-machine ip`.
+
+## authn
+
+By default, the oauth server is configured to talk to conjurops: the public SSL cert is checked into the *certs* directory and `CONJUR_URL` specifies the Conjur endpoint in *docker-compose.yml*. Log into the registry using your Conjur username and password:
 
 ```
-./startdemo.sh
+$ docker login $(docker-machine ip):5000
+Username: dustin
+Password: <REDACTED>
+Login Succeeded
 ```
 
-And you should see a detailed explaination of the oauth handshake process.
+## authz
 
-##CONFIGURATIONS
+TODO
 
-The following are a list of environment variables that has to be set for the oauth_server container to work properly.
-####SIGNING_KEY_PATH
-Specifies the path to the private key used to sign tokens. Must be a valid path inside the container.
+The `get_allowed_actions` in [app.py](app.py) is a stub for looking up what actions a user is allowed to perform. We need to do a Conjur lookup here. For example, when a user tries to push an image (alpine in this example), this scope request is `repository:alpine:push,pull`, which maps to `type:name:actions`. Given a username, `get_allowed_actions` needs to return a list of actions that the user is authorized to perform.
 
-####SIGNING_KEY_TYPE
-Specifies the type of key used to sign tokens. Can be either RSA or EC, defaults to RSA
-
-####SIGNING_KEY_ALG
-Specifies the algorithm used to sign tokens. For RSA keys this should be set to RS256. For EC keys this should be set to ES256
-
-####ISSUER
-Identifies who signed the token to the registry. Usually the FQDN of the OAuth Server is used. This configuration should match the REGISTRY_AUTH_TOKEN_ISSUER variable used to configure the registry.
-
-####TOKEN_EXPIRATION
-Specifies the expiration time in seconds for tokens signed by this server. Defaults to 3600 seconds.
-
-####TOKEN_TYPE
-Specifies the type of tokens signed by this server. Defaults to JWT
+Spec details here: https://docs.docker.com/registry/spec/auth/token/
