@@ -1,0 +1,27 @@
+- !policy
+  id: dustinops
+  annotations:
+    description: Policy that governs access to Docker registry
+  body:
+    - !host &registry registry
+
+    - !group &pushers pushers
+    - !group &pullers pullers
+
+    - !permit
+      role: *pushers
+      resource: *registry
+      privileges: [push]
+
+    - !permit
+      role: *pullers
+      resource: *registry
+      privileges: [pull]
+
+    - !grant
+      role: *pushers
+      members: *registry
+
+    - !grant
+      role: *pullers
+      members: *registry
