@@ -13,8 +13,8 @@ def check_auth(username, password):
     request.user = username
 
     resp = requests.get(
-        '{}/api/authn/users/login'.format(os.environ.get('CONJUR_URL')),
-        verify=os.environ.get('CONJUR_SSL_CERT'),
+        '{}/authn/users/login'.format(os.environ.get('CONJUR_APPLIANCE_URL')),
+        verify=os.environ.get('CONJUR_CERT_FILE'),
         auth=HTTPBasicAuth(username, password))
     return resp.status_code == 200
 

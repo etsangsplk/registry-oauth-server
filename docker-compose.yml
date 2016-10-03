@@ -7,13 +7,12 @@ registry:
         - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
         - REGISTRY_HTTP_TLS_KEY=/certs/server.key
         - REGISTRY_AUTH=token
-        - REGISTRY_AUTH_TOKEN_REALM=http://$DOCKER_IP:8080/tokens
+        - REGISTRY_AUTH_TOKEN_REALM=http://localhost:8080/tokens
         - REGISTRY_AUTH_TOKEN_SERVICE=demo_registry
         - REGISTRY_AUTH_TOKEN_ISSUER=demo_oauth
         - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/certs/server.crt
     volumes:
         - ./certs:/certs
-
 
 oauth_server:
     build: .
@@ -29,5 +28,10 @@ oauth_server:
         - ISSUER=demo_oauth
         - TOKEN_EXPIRATION=3600
         - TOKEN_TYPE=JWT
-        - CONJUR_SSL_CERT=/certs/conjur-conjurops.pem
-        - CONJUR_URL=https://conjur-master.itp.conjur.net
+        - CONJUR_CERT_FILE=/certs/conjur-conjurops.pem
+        - CONJUR_APPLIANCE_URL=https://conjur-master.itp.conjur.net/api
+        - CONJUR_ACCOUNT=conjurops
+        - CONJUR_REGISTRY_HOST_NAME=host/dustinops/registry
+        - CONJUR_REGISTRY_HOST_API_KEY=t0xf023h5yd902tq9mxvendche1341tdb2k0999r1gxqhfn1tgfnt9
+        - CONJUR_PUSHERS_GROUP_NAME=dustinops/pushers
+        - CONJUR_PULLERS_GROUP_NAME=dustinops/pullers
