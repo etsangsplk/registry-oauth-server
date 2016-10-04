@@ -9,24 +9,22 @@ from tokens import Token
 app = Flask(__name__)
 
 
-def get_allowed_actions(user, typ, name, actions):
+def get_allowed_actions(userid, typ, name, actions):
+    actions = []
+
+    host_id = os.environ['CONJUR_REGISTRY_HOST_NAME']
+
     api = conjur.new_from_key(
-        os.environ['CONJUR_REGISTRY_HOST_NAME'],
+        'host/{}'.format(host_id),
         os.environ['CONJUR_REGISTRY_HOST_API_KEY']
     )
 
-    pushers = api.group(os.environ['CONJUR_PUSHERS_GROUP_NAME'])
-    pullers = api.group(os.environ['CONJUR_PULLERS_GROUP_NAME'])
+    user = api.user(userid)
 
-    pushers_names = [x['member'].split(':')[-1] for x in pushers.members()]
-    pullers_names = [x['member'].split(':')[-1] for x in pullers.members()]
-
-    actions = []
-
-    if user in pushers_names:
+    if api.resource('host', host_id).permitted('push', user):
         actions.append('push')
 
-    if user in pullers_names:
+    if api.resource('host', host_id).permitted('pull', user):
         actions.append('pull')
 
     return actions

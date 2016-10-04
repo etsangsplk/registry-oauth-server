@@ -38,10 +38,8 @@ Configuration is applied by passing environment variables to the OAuth container
 * `CONJUR_CERT_FILE`: Path to Conjur public SSL cert (should be mounted into container)
 * `CONJUR_APPLIANCE_URL`: Conjur endpoint
 * `CONJUR_ACCOUNT`: Conjur account, specified during initial configuration
-* `CONJUR_REGISTRY_HOST_NAME`: Name of the host representing the registry, prefixed with 'host/'
+* `CONJUR_REGISTRY_HOST_NAME`: Name of the host representing the registry
 * `CONJUR_REGISTRY_HOST_API_KEY`: API key of the registry host
-* `CONJUR_PUSHERS_GROUP_NAME`: Name of the group allowed to push to registry
-* `CONJUR_PULLERS_GROUP_NAME`: Name of the group allowed to pull from the registry
 
 ## authn
 
@@ -60,8 +58,8 @@ The function `check_auth` in [auth.py](auth.py) calls out to Conjur to verify th
 
 ## authz
 
-Authorization is performed by checking the group membership for the authenticated user.
-A user can be in both `pusher` and `puller` groups. Membership is checked in real-time, when the request is recieved.
+Authorization is performed by checking privilege on the `registry` host, either `push` or `pull`.
+Privilege is checked in real-time, when the request is recieved.
 
 More granular permission checking can be implemented by modifying the function `get_allowed_actions` in [app.py](app.py).
 `typ` is the type of action, most commonly 'repository'. `name` is the name of the repository.
