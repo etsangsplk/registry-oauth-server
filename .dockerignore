@@ -1,0 +1,6 @@
+certs
+docker-compose.yml
+*.sh
+*.pyc
+policy.yml
+ansible
