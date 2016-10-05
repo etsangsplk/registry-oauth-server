@@ -71,3 +71,4 @@ OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
 TODO:
 
 * Machine authz - current authz implementation assumes user is a User
+* Deployment guide (to AWS)
