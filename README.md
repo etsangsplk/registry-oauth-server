@@ -65,3 +65,9 @@ More granular permission checking can be implemented by modifying the function `
 `typ` is the type of action, most commonly 'repository'. `name` is the name of the repository.
 
 OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
+
+---
+
+TODO:
+
+* Machine authz - current authz implementation assumes user is a User
