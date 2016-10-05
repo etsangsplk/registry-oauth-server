@@ -62,7 +62,7 @@ Authorization is performed by checking privilege on the `registry` host, either 
 Privilege is checked in real-time, when the request is recieved.
 
 More granular permission checking can be implemented by modifying the function `get_allowed_actions` in [app.py](app.py).
-`typ` is the type of action, most commonly 'repository'. `name` is the name of the repository.
+`type` is the type of action, most commonly 'repository'. `name` is the name of the repository.
 
 OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
 
@@ -70,5 +70,7 @@ OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
 
 TODO:
 
+* Add a webservice to the policy to represent the registry
+* Use privilege-based authorization rather than checking role membership
 * Machine authz - current authz implementation assumes user is a User
 * Deployment guide (to AWS)
