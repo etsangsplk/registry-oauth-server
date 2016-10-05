@@ -68,4 +68,4 @@ There are a couple things to note on our implementation of Registry authn/authz.
 Docker-native. Users/machines log in to the registry using `docker login` with their own Conjur credentials. When 
 they try to push/pull an image Conjur is consulted. This operation is not exposed to the user; as far as they know 
 they're just using a Docker registry as usual. Second, deployment and configuration is simply and requires only 1. 
-Registry and 2. Conjur. There are extra files/database to maintain.
+Registry and 2. Conjur. There are no extra files/database to maintain.
