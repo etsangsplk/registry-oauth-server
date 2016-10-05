@@ -6,7 +6,7 @@ This is not an exhaustive guide, but covers popular **self-hosted** tooling and 
 
 |Project|authn|authz|audit|ease of use|web interface|
 |-------|-----|-----|-----|-----------|-------------|
-|Registry|static|no|no|*****|DIY|
+|Registry|static|no|no|*****|no|
 |Portus|UI/LDAP|UI/LDAP|yes|**|yes|
 |Atomic Registry|UI/OAuth/OpenShift|UI/RBAC|no|*|yes|
 |cesanta/docker_auth|static/SSO/MongoDB/LDAP|static/MongoDB|no|***|no|
