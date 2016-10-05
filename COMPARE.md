@@ -1,7 +1,7 @@
 # Docker Registry authn/authz
 
 This document is a summary of the state of tooling for authenticating and authorizing use of a Docker registry (v2). 
-This is not an exhaustive guide, but covers popular tooling and approaches right now.
+This is not an exhaustive guide, but covers popular **self-hosted** tooling and approaches right now.
 
 
 |Project|authn|authz|audit|ease of use|web interface|
