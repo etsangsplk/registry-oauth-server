@@ -10,7 +10,7 @@ This is not an exhaustive guide, but covers popular **self-hosted** tooling and 
 |Portus|UI/LDAP|UI/LDAP|yes|**|yes|
 |Atomic Registry|UI/OAuth/OpenShift|UI/RBAC|no|*|yes|
 |cesanta/docker_auth|static/SSO/MongoDB/LDAP|static/MongoDB|no|***|no|
-|conjurinc/registry-oauth-server|Conjur|Conjur|yes|****|no|
+|conjurinc/registry-oauth-server|Conjur password or LDAP/AD password|policy-based RBAC|yes|****|no|
 
 # 1. [Registry](https://docs.docker.com/registry/)
 
@@ -62,10 +62,10 @@ MongoDB (losing popularity over the past couple years) just to security their Do
 Our solution is a customization of OpenDNS's [registry-oauth-server](https://github.com/opendns/registry-oauth-server). 
 This server is a small Python webapp that implements the OAuth2 spec defined by Docker with pluggable authn/authz 
 functions. `registry-oauth-server` is published as a Docker image that runs alongside Registry. When a request is 
-made to the registry, registry-oauth-server verifies authn/authz with Conjur. A web interface is not built-in.
+made to the registry, registry-oauth-server verifies authn/authz with Conjur. Authorization is managed via Conjur policy and entitlements. Policy and entitlements can be viewed, but not currently edited, from the Conjur UI. The audit of registry actions is also visible in the UI and can be exported to compliance systems of record such as Splunk.
 
 There are a couple things to note on our implementation of Registry authn/authz. First, the user flow is 
 Docker-native. Users/machines log in to the registry using `docker login` with their own Conjur credentials. When 
 they try to push/pull an image Conjur is consulted. This operation is not exposed to the user; as far as they know 
-they're just using a Docker registry as usual. Second, deployment and configuration is simply and requires only 1. 
+they're just using a Docker registry as usual. Second, deployment and configuration is simple and requires only 1. 
 Registry and 2. Conjur. There are no extra files/database to maintain.
