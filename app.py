@@ -5,14 +5,14 @@ from flask import Flask, request, jsonify
 
 from auth import basic_auth_required
 from tokens import Token
+from util import send_audit_event
 
 app = Flask(__name__)
 
 
 def get_allowed_actions(userid, typ, name, actions):
-    actions = []
-
     if typ == 'repository':
+        actions = []
         host_id = os.environ['CONJUR_REGISTRY_HOST_NAME']
 
         api = conjur.new_from_key(

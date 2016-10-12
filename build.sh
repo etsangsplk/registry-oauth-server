@@ -17,17 +17,17 @@ docker-compose up -d conjur
 
 # Configure Conjur
 docker exec registryoauthserver_conjur_1 evoke configure master \
-  -h localhost -p password docker || true
-yes 'yes' | conjur init -f .conjurrc.docker -h localhost:443
-cp conjur-docker.pem certs/
+  -h localhost -p password myorg || true
+yes 'yes' | conjur init -f .conjurrc.myorg -h localhost:443
+cp conjur-myorg.pem certs/
 
 # Log in as Conjur admin user and load policy.yml
-export CONJURRC=.conjurrc.docker
+export CONJURRC=.conjurrc.myorg
 conjur authn login -u admin -p password
 conjur policy load --as-group security_admin --context policy.json policy.yml
 
 # Export the created host's API key
-export CONJUR_REGISTRY_HOST_API_KEY=$(cat policy.json | jq -r '."docker:host:dustinops/registry"')
+export CONJUR_REGISTRY_HOST_API_KEY=$(cat policy.json | jq -r '."myorg:host:docker/registry"')
 
 export DH_PARAM_PEM=$(cat dhparam.pem)
 

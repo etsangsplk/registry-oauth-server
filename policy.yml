@@ -1,5 +1,5 @@
 - !policy
-  id: dustinops
+  id: docker
   annotations:
     description: Policy that governs access to Docker registry
   body:
