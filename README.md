@@ -64,6 +64,9 @@ Privilege is checked in real-time, when the request is recieved.
 More granular permission checking can be implemented by modifying the function `get_allowed_actions` in [app.py](app.py).
 `type` is the type of action, most commonly 'repository'. `name` is the name of the repository.
 
+Note that roles must have `pull` and `push` privilege to push images to the registry. This is required because
+Docker makes a pull request (to check if image already exists) before pushing images.
+
 OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
 
 ---
