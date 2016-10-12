@@ -74,6 +74,5 @@ OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
 TODO:
 
 * Add a webservice to the policy to represent the registry
-* Use privilege-based authorization rather than checking role membership
 * Machine authz - current authz implementation assumes user is a User
 * Deployment guide (to AWS)
