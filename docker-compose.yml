@@ -1,35 +1,52 @@
 registry:
-    restart: always
-    image: registry:2
-    ports:
-        - 5000:5000
-    environment:
-        - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
-        - REGISTRY_HTTP_TLS_KEY=/certs/server.key
-        - REGISTRY_AUTH=token
-        - REGISTRY_AUTH_TOKEN_REALM=http://localhost:8080/tokens
-        - REGISTRY_AUTH_TOKEN_SERVICE=demo_registry
-        - REGISTRY_AUTH_TOKEN_ISSUER=demo_oauth
-        - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/certs/server.crt
-    volumes:
-        - ./certs:/certs
+  image: registry:2
+  ports:
+    - 5000:5000
+  volumes:
+    - ./certs:/certs
+  environment:
+    - REGISTRY_HTTP_TLS_CERTIFICATE=/certs/server.crt
+    - REGISTRY_HTTP_TLS_KEY=/certs/server.key
+    - REGISTRY_AUTH=token
+    - REGISTRY_AUTH_TOKEN_REALM=http://localhost:8080/tokens
+    - REGISTRY_AUTH_TOKEN_SERVICE=demo_registry
+    - REGISTRY_AUTH_TOKEN_ISSUER=demo_oauth
+    - REGISTRY_AUTH_TOKEN_ROOTCERTBUNDLE=/certs/server.crt
 
 oauth_server:
-    build: .
-    ports:
-        - 8080:8080
-    volumes:
-        - .:/server
-        - ./certs:/certs
-    environment:
-        - SIGNING_KEY_PATH=/certs/server.key
-        - SIGNING_KEY_TYPE=RSA
-        - SIGNING_KEY_ALG=RS256
-        - ISSUER=demo_oauth
-        - TOKEN_EXPIRATION=3600
-        - TOKEN_TYPE=JWT
-        - CONJUR_CERT_FILE=/certs/conjur-conjurops.pem
-        - CONJUR_APPLIANCE_URL=https://conjur-master.itp.conjur.net/api
-        - CONJUR_ACCOUNT=conjurops
-        - CONJUR_REGISTRY_HOST_NAME=dustinops/registry
-        - CONJUR_REGISTRY_HOST_API_KEY=t0xf023h5yd902tq9mxvendche1341tdb2k0999r1gxqhfn1tgfnt9
+  build: .
+  ports:
+    - 8080:8080
+  links:
+    - conjur
+  volumes:
+    - .:/server
+    - ./certs:/certs
+  environment:
+    - SIGNING_KEY_PATH=/certs/server.key
+    - SIGNING_KEY_TYPE=RSA
+    - SIGNING_KEY_ALG=RS256
+    - ISSUER=demo_oauth
+    - TOKEN_EXPIRATION=3600
+    - TOKEN_TYPE=JWT
+    - CONJUR_CERT_FILE=/certs/conjur-docker.pem
+    - CONJUR_APPLIANCE_URL=https://conjur/api
+    - CONJUR_ACCOUNT=docker
+    - CONJUR_REGISTRY_HOST_NAME=dustinops/registry
+    - CONJUR_REGISTRY_HOST_API_KEY
+
+conjur:
+  image: registry.tld/conjur-appliance:4.8-stable
+  privileged: true
+  ports:
+      - "443:443"
+
+conjur_ui:
+  image: conjurinc/conjur-ui
+  ports:
+      - "8443:443"
+  links:
+    - conjur
+  environment:
+    - CONJUR_APPLIANCE_URL=https://conjur
+    - DH_PARAM_PEM

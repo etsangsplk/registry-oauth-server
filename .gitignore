@@ -1,5 +1,9 @@
+.conjurrc*
+policy.json
 certs/*.crt
 certs/*.key
+certs/*.pem
+*.pem
 
 *.pyc
 .idea/

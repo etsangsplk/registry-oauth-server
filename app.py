@@ -56,4 +56,4 @@ def tokens():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)  # add debug=True for more verbose logging
+    app.run(host='0.0.0.0', port=8080, debug=bool(os.environ.get('DEBUG', 0)))
