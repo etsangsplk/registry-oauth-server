@@ -12,20 +12,21 @@ app = Flask(__name__)
 def get_allowed_actions(userid, typ, name, actions):
     actions = []
 
-    host_id = os.environ['CONJUR_REGISTRY_HOST_NAME']
+    if typ == 'repository':
+        host_id = os.environ['CONJUR_REGISTRY_HOST_NAME']
 
-    api = conjur.new_from_key(
-        'host/{}'.format(host_id),
-        os.environ['CONJUR_REGISTRY_HOST_API_KEY']
-    )
+        api = conjur.new_from_key(
+            'host/{}'.format(host_id),
+            os.environ['CONJUR_REGISTRY_HOST_API_KEY']
+        )
 
-    user = api.user(userid)
+        user = api.user(userid)
 
-    if api.resource('host', host_id).permitted('push', user):
-        actions.append('push')
+        if api.resource('host', host_id).permitted('push', user):
+            actions.append('push')
 
-    if api.resource('host', host_id).permitted('pull', user):
-        actions.append('pull')
+        if api.resource('host', host_id).permitted('pull', user):
+            actions.append('pull')
 
     return actions
 

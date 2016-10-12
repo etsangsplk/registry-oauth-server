@@ -34,6 +34,7 @@ oauth_server:
     - CONJUR_ACCOUNT=docker
     - CONJUR_REGISTRY_HOST_NAME=dustinops/registry
     - CONJUR_REGISTRY_HOST_API_KEY
+    - DEBUG=1
 
 conjur:
   image: registry.tld/conjur-appliance:4.8-stable
