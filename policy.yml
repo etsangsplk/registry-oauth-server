@@ -5,8 +5,15 @@
   body:
     - !host &registry registry
 
-    - !group &pushers pushers
-    - !group &pullers pullers
+    - !group &pushers
+      id: pushers
+      annotations:
+        description: Allowed to pull images from registry
+
+    - !group &pullers
+      id: pullers
+      annotations:
+        description: Allowed to push images to registry
 
     - !permit
       role: *pushers
