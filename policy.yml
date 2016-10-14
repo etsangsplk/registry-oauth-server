@@ -24,11 +24,3 @@
       role: *pullers
       resource: *registry
       privileges: [pull]
-
-    - !grant
-      role: *pushers
-      members: *registry
-
-    - !grant
-      role: *pullers
-      members: *registry
