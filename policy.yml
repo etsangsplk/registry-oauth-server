@@ -11,7 +11,7 @@
     - !permit
       role: *pushers
       resource: *registry
-      privileges: [push]
+      privileges: [pull, push]
 
     - !permit
       role: *pullers
