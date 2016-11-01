@@ -11,6 +11,7 @@ def check_auth(username, password):
     This function is called to check if a username/password combination is valid.
     """
     request.user = username
+
     api = conjur.new_from_key(username, password)
     try:
         api.authenticate()

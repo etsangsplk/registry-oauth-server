@@ -5,12 +5,11 @@ from flask import Flask, request, jsonify
 
 from auth import basic_auth_required
 from tokens import Token
-from util import send_audit_event
 
 app = Flask(__name__)
 
 
-def get_allowed_actions(userid, typ, name, actions):
+def get_allowed_actions(roleid, typ, name, actions):
     if typ == 'repository':
         actions = []
         host_id = os.environ['CONJUR_REGISTRY_HOST_NAME']
@@ -20,12 +19,15 @@ def get_allowed_actions(userid, typ, name, actions):
             os.environ['CONJUR_REGISTRY_HOST_API_KEY']
         )
 
-        user = api.user(userid)
+        if roleid.startswith('host/'):
+            hostid = '/'.join(roleid.split('/')[1:])  # remove leading 'host/'
+            role = api.host(hostid)
+        else:
+            role = api.user(roleid)
 
-        if api.resource('host', host_id).permitted('push', user):
-            actions.append('push')
-
-        if api.resource('host', host_id).permitted('pull', user):
+        if api.resource('host', host_id).permitted('push', role):
+            actions.extend(['push', 'pull'])  # pushing requires pull privilege as well
+        elif api.resource('host', host_id).permitted('pull', role):
             actions.append('pull')
 
     return actions
