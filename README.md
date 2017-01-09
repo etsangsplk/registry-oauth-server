@@ -23,15 +23,13 @@ and a local oauth server running on `:8080`.
 
 ## Policy
 
-[policy.yml](policy.yml) defines:
+The example [policy.yml](policy.yml) defines:
 
 * A host that represents the Docker registry (`registry`)
 * A group of users that can push to registry (`pushers`)
 * A group of users that can pull from registry (`pullers`)
 
-Group `pushers` is permitted `push` on `registry`. Group `pullers` is permitted `pull` on `registry`.
-Host `registry` is a member of both `pushers` and `pullers`. This is because a role needs to be a member of the group
-to discover the group's members.
+Roles that are allowed to push to the registry have `push` privilege on the registry host, pullers have `pull` privilege.
 
 ## Configuration
 
@@ -76,5 +74,3 @@ OAuth spec details here: https://docs.docker.com/registry/spec/auth/token/
 TODO:
 
 * Add a webservice to the policy to represent the registry
-* Machine authz - current authz implementation assumes user is a User
-* Deployment guide (to AWS)
