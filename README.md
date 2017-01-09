@@ -6,6 +6,8 @@ View the upstream README for configuration defaults.
 The purpose of this fork is to authenticate and authorize Docker registry users with
 Conjur.
 
+Project [registry-ansible](https://github.com/conjurinc/registry-ansible) deploys this to AWS.
+
 ## Quickstart
 
 This assumes you have Docker running and available.
