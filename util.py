@@ -8,12 +8,16 @@ def send_audit_event(username, action, allowed, message=''):
         'host/{}'.format(os.environ['CONJUR_REGISTRY_HOST_NAME']),
         os.environ['CONJUR_REGISTRY_HOST_API_KEY']
     )
+
+    role_type = 'host' if username.startswith('host/') else 'user'
+    bare_username = username.replace('host/', '')
+
     json = {
         'facility': 'docker',
         'action': action,
         'allowed': allowed,
         'resource_id': '{}:host:{}'.format(hostapi.config.account, os.environ['CONJUR_REGISTRY_HOST_NAME']),
-        'role': '{}:user:{}'.format(hostapi.config.account, username)
+        'role': '{}:{}:{}'.format(hostapi.config.account, role_type, bare_username)
     }
     if message != '':
         json['audit_message'] = message
