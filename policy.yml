@@ -1,26 +1,53 @@
+# This policy is for conjurops v1
 - !policy
-  id: docker
+  id: registry-v2
   annotations:
-    description: Policy that governs access to Docker registry
+    description: Policy that governs access to Docker registry v2
   body:
-    - !host &registry registry
+    - !layer
+      annotations:
+        description: Layer for registry hosts
+
+    - !host-factory
+      layers: [ !layer ]
+      annotations:
+        description: Host Factory for registry hosts
+
+    - !webservice
+      annotations:
+        description: Web service representing registry service
+
+    - !variable host-factory-token  # saving here for convenience
 
     - !group &pushers
       id: pushers
       annotations:
-        description: Allowed to pull images from registry
+        description: Roles that can push to registry webservice
 
     - !group &pullers
       id: pullers
       annotations:
-        description: Allowed to push images to registry
+        description: Roles that can pull from registry webservice
 
     - !permit
       role: *pushers
-      resource: *registry
-      privileges: [push]
+      resource: !webservice
+      privilege: push
 
     - !permit
       role: *pullers
-      resource: *registry
-      privileges: [pull]
+      resource: !webservice
+      privilege: pull
+
+    - !permit
+      role: !layer
+      resource: !webservice
+      privilege: read  # needed to do privilege checks on the webservice
+
+    - !grant
+      role: *pushers
+      member: !layer /jenkins/v1/executors
+
+    - !grant
+      role: *pullers
+      member: !group /v4/developers

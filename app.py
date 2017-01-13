@@ -11,11 +11,11 @@ app = Flask(__name__)
 
 def get_allowed_actions(roleid, typ, name, actions):
     if typ == 'repository':
-        actions = []
-        host_id = os.environ['CONJUR_REGISTRY_HOST_NAME']
+        requested_actions = actions[:]
+        actions = []  # clear actions, we're going to check them with Conjur
 
         api = conjur.new_from_key(
-            'host/{}'.format(host_id),
+            'host/{}'.format(os.environ['CONJUR_REGISTRY_HOST_NAME']),
             os.environ['CONJUR_REGISTRY_HOST_API_KEY']
         )
 
@@ -25,10 +25,11 @@ def get_allowed_actions(roleid, typ, name, actions):
         else:
             role = api.user(roleid)
 
-        if api.resource('host', host_id).permitted('push', role):
-            actions.extend(['push', 'pull'])  # pushing requires pull privilege as well
-        elif api.resource('host', host_id).permitted('pull', role):
-            actions.append('pull')
+        webservice = api.resource('webservice', os.environ['CONJUR_REGISTRY_WEBSERVICE'])
+
+        for action in requested_actions:
+            if webservice.permitted(action, role):
+                actions.append(action)
 
     return actions
 

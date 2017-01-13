@@ -18,7 +18,7 @@ def check_auth(username, password):
     except conjur.ConjurException:
         return False
 
-    send_audit_event(username, 'login', True)
+    send_audit_event(username, password, 'login', True)
     return True
 
 
